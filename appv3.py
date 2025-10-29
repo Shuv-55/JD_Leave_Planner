@@ -12,7 +12,7 @@ from pathlib import Path
 # =============================================================================
 st.set_page_config(page_title="JD-LMS", page_icon="template/jd.png", layout="wide", initial_sidebar_state="collapsed")
 
-SERVICE_ACCOUNT_FILE = "lp-dashboard-475113-5f6c1e76d68f.json"
+credentials = Credentials.from_service_account_info(st.secrets["gcp_service_account"])
 SPREADSHEET_NAME = "Leave_Planner"
 USERS_SHEET_NAME = "user_info"
 LEAVES_SHEET_NAME = "leave_Data"
@@ -1081,4 +1081,5 @@ def main():
         render_edit_user_page(user_df, client, leave_df)
 
 if __name__ == '__main__':
+
     main()
