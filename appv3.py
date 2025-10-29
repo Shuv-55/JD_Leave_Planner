@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2.service_account import Credentials
 from datetime import datetime, date, timedelta
 import calendar
 import base64
@@ -10,20 +10,21 @@ from pathlib import Path
 # =============================================================================
 # CONFIGURATION SECTION
 # =============================================================================
-st.set_page_config(page_title="JD-LMS", page_icon="template/jd.png", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="JD-LMS", page_icon="🏢", layout="wide", initial_sidebar_state="collapsed")
 
-credentials = Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+# For Streamlit Cloud - use secrets
+SERVICE_ACCOUNT_INFO = st.secrets["gcp_service_account"]
 SPREADSHEET_NAME = "Leave_Planner"
 USERS_SHEET_NAME = "user_info"
 LEAVES_SHEET_NAME = "leave_Data"
 DEFAULT_PASSWORD = "SN123"
 ADMIN_USERS = ["10110052", "10059480"]
 
-# Image paths
-BACKGROUND_IMAGE_PATH = r"template\abstract-background-3840x2160-10850.png"
-LOGO_IMAGE_PATH = r"template\jd.png"
-LOGIN_BUTTON_IMAGE_PATH = r"template\login.png"
-LMS_LOGO_PATH = r"template\LMS.png"
+# Image paths - relative paths for Streamlit Cloud
+BACKGROUND_IMAGE_PATH = "template/abstract-background-3840x2160-10850.png"
+LOGO_IMAGE_PATH = "template/jd.png"
+LOGIN_BUTTON_IMAGE_PATH = "template/login.png"
+LMS_LOGO_PATH = "template/LMS.png"
 
 # Mandatory Holidays
 MANDATORY_HOLIDAYS = {
@@ -38,22 +39,10 @@ MANDATORY_HOLIDAYS = {
 # =============================================================================
 @st.cache_resource
 def get_gspread_client():
-    """Initialize Google Sheets client using Streamlit Secrets"""
-    # Define the required API scopes
-    scope = [
-        "https://spreadsheets.google.com/feeds",
-        "https://www.googleapis.com/auth/drive"
-    ]
-
-    # Load credentials from Streamlit secrets securely
-    creds = Credentials.from_service_account_info(
-        st.secrets["gcp_service_account"],
-        scopes=scope
-    )
-
-    # Authorize the gspread client with these credentials
-    client = gspread.authorize(creds)
-    return client
+    """Initialize Google Sheets client using Streamlit secrets"""
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(SERVICE_ACCOUNT_INFO, scope)
+    return gspread.authorize(creds)
 
 def open_worksheet(client, sheet_name):
     """Open specific worksheet"""
@@ -1093,6 +1082,4 @@ def main():
         render_edit_user_page(user_df, client, leave_df)
 
 if __name__ == '__main__':
-
     main()
-
