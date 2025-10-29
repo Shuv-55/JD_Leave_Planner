@@ -41,8 +41,9 @@ MANDATORY_HOLIDAYS = {
 def get_gspread_client():
     """Initialize Google Sheets client using Streamlit secrets"""
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(SERVICE_ACCOUNT_INFO, scope)
+    creds = Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO,scopes=scope)
     return gspread.authorize(creds)
+
 
 def open_worksheet(client, sheet_name):
     """Open specific worksheet"""
@@ -1083,3 +1084,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
