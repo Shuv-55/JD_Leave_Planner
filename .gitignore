@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Google Service Account JSON
+*.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+```
+
+## What Each Section Does:
+
+### 🐍 **Python** - Ignores:
+- `__pycache__/` - Python cache folders (auto-generated)
+- `*.pyc`, `*.pyo` - Compiled Python files
+- `venv/`, `env/` - Virtual environment folders
+
+### 🔒 **Streamlit** - Ignores:
+- `.streamlit/secrets.toml` - Your LOCAL secrets file (CRITICAL!)
+
+### 🔑 **Google Service Account** - Ignores:
+- `*.json` - All JSON files (includes your service account key)
+
+### 💻 **IDE** - Ignores:
+- `.vscode/`, `.idea/` - Editor configuration folders
+- `*.swp`, `*.swo` - Vim temporary files
+
+### 🖥️ **OS** - Ignores:
+- `.DS_Store` - Mac system files
+- `Thumbs.db` - Windows thumbnail cache
+
+### 📝 **Logs** - Ignores:
+- `*.log` - Log files
+
+## ⚠️ Most Important Lines:
+```
+.streamlit/secrets.toml    # Your local credentials - NEVER commit!
+*.json                     # Your service account file - NEVER commit!
