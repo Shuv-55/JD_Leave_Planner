@@ -20,10 +20,10 @@ DEFAULT_PASSWORD = "SN123"
 ADMIN_USERS = ["10110052", "10059480"]
 
 # Image paths
-BACKGROUND_IMAGE_PATH = r"C:\Users\10110052\Leave Planner\template\abstract-background-3840x2160-10850.png"
-LOGO_IMAGE_PATH = r"C:\Users\10110052\Leave Planner\template\jd.png"
-LOGIN_BUTTON_IMAGE_PATH = r"C:\Users\10110052\Leave Planner\template\login.png"
-LMS_LOGO_PATH = r"C:\Users\10110052\Leave Planner\template\LMS.png"
+BACKGROUND_IMAGE_PATH = r"template\abstract-background-3840x2160-10850.png"
+LOGO_IMAGE_PATH = r"template\jd.png"
+LOGIN_BUTTON_IMAGE_PATH = r"template\login.png"
+LMS_LOGO_PATH = r"template\LMS.png"
 
 # Mandatory Holidays
 MANDATORY_HOLIDAYS = {
@@ -37,11 +37,23 @@ MANDATORY_HOLIDAYS = {
 # GOOGLE SHEETS CONNECTION SECTION
 # =============================================================================
 @st.cache_resource
-def get_gspread_client(service_file=SERVICE_ACCOUNT_FILE):
-    """Initialize Google Sheets client"""
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name(service_file, scope)
-    return gspread.authorize(creds)
+def get_gspread_client():
+    """Initialize Google Sheets client using Streamlit Secrets"""
+    # Define the required API scopes
+    scope = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/drive"
+    ]
+
+    # Load credentials from Streamlit secrets securely
+    creds = Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=scope
+    )
+
+    # Authorize the gspread client with these credentials
+    client = gspread.authorize(creds)
+    return client
 
 def open_worksheet(client, sheet_name):
     """Open specific worksheet"""
@@ -1083,3 +1095,4 @@ def main():
 if __name__ == '__main__':
 
     main()
+
